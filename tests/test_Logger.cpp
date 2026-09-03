@@ -1,4 +1,10 @@
+#include "Enricher.h"
+#include "Filter.h"
+#include "Formatter.h"
+#include "LogManager.h"
+#include "LogRecord.h"
 #include "Logger.h"
+#include "Sink.h"
 #include <gtest/gtest.h>
 #include <memory>
 #include <set>
@@ -92,11 +98,12 @@ TEST(LogManagerTest, BuilderConfiguresLoggerCorrectly) {
     auto sink = std::make_unique<StringSink>();
     auto sinkPtr = sink.get();
 
-    Logger& log = LogManager::instance()
-                      .buildLogger("BuilderTestLogger")
-                      .withLevelFilter(LogLevel::ERROR)
-                      .addCustomSink(std::move(sink))
-                      .build();
+    Logger& log =
+        LogManager::instance()
+            .buildLogger("BuilderTestLogger")
+            .withFilter(std::make_unique<LevelFilter>(LogLevel::ERROR))
+            .withSink(std::move(sink))
+            .build();
 
     log.warn("warning");
     EXPECT_EQ(sinkPtr->writeCount, 0);

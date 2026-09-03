@@ -17,7 +17,14 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_library(Logger SHARED src/Logger.cpp)
+add_library(Logger STATIC
+    src/Logger.cpp
+    src/Filter.cpp
+    src/Enricher.cpp
+    src/Formatter.cpp
+    src/Sink.cpp
+    src/LogManager.cpp
+)
 target_include_directories(Logger PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(Logger_tests tests/test_Logger.cpp)
